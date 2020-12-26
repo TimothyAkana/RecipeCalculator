@@ -1,25 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import conversions from '../helpers/conversions.js';
+import IngredientForm from './IngredientForm.jsx';
+import RecipeForm from './RecipeForm.jsx';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-
-    };
-  }
-
-  componentDidMount() {
-    const id = window.location.pathname.split('/')[1];
-    this.loadListingPhotos(id);
-    this.checkFavorite();
-  }
-
-  render() {
-    return (
-      <div>Hello World!</div>
-    )
-  }
+export default function App(props) {
+  return (
+    <div className="container">
+      <IngredientForm />
+      <RecipeForm />
+    </div>
+  )
 }
-
-export default App;
