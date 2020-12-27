@@ -8,7 +8,7 @@ export default function App(props) {
   return (
     <div className="container">
       <IngredientForm />
-      <RecipeForm />
+      {/* <RecipeForm /> */}
     </div>
   )
 }

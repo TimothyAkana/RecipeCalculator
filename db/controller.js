@@ -3,11 +3,11 @@ const db = require('./connection.js');
 module.exports = {
   //Ingredient Methods
   addIngredient: (req, res) => {
-    const text = 'INSERT INTO recipe.ingredients (name, quantity, measurement, cost) VALUES ($1, $2, $3, $4)';
+    const text = 'INSERT INTO recipe.ingredients (name, quantity, measurement, cost) VALUES ($1, $2, $3, $4) RETURNING *';
     const values = [req.body.ingredient, req.body.quantity, req.body.measurement, req.body.cost];
     db.query(text, values, (err, data) => {
       if (err) {console.log(err.stack)}
-      else {res.sendStatus(201)}
+      else {res.json(data.rows)}
     })
   },
   getIngredient: (req, res) => {
