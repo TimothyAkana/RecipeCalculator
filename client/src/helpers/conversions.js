@@ -50,3 +50,12 @@ module.exports.costPerGram = (quantity, measurement, cost, gramsPerCup) => {
     return cost / (cups * gramsPerCup);
   }
 }
+
+module.exports.totalCost = (quantity, measurement, costPerGram, gramsPerCup) => {
+  if (gramConversions[measurement]) {
+    return costPerGram * quantity * gramConversions[measurement];
+  } else {
+    let cups = (quantity * tspConversions[measurement]) / tspConversions['cup'];
+    return costPerGram * gramsPerCup * cups;
+  }
+}

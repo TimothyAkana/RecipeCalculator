@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useInput } from '../hooks/input.js';
 import measurements from '../helpers/measurements.js';
+import conversions from '../helpers/conversions.js';
 
 export default function RecipeForm(props) {
   //Printout of in-progress recipe
@@ -14,9 +15,10 @@ export default function RecipeForm(props) {
   const [ quantity, setQuantity ] = useState('');
   const [ measurement, setMeasurement] = useState('gram');
   //TESTING
-  const [ totalCost, setTotalCost ] = useState('');
+  const [ totalCost, setTotalCost ] = useState(0);
   const [ costPerGram, setCostPerGram ] = useState('');
   const [ gramsPerCup, setGramsPerCup ] = useState('');
+  const [ id, setId] = useState('');
 
   //Populate List of Ingredients in Dropdown with ingredients from database
   const [ ingredientDropdown, setIngredientDropdown] = useState([]);
@@ -29,10 +31,21 @@ export default function RecipeForm(props) {
       .catch((err) => console.log(err));
   }, []);
 
+  //Updates total Cost when ingredientList changes
+  useEffect(() => {
+    let total = 0;
+    for (var i = 0; i < ingredientList.length; i++) {
+      total += ingredientList[i].totalIngredientCost;
+    }
+    setTotalCost(total);
+  }, [ingredientList]);
+
   //Adds Ingredient to Recipe-in-progress
   const handleSubmit = (event) => {
     event.preventDefault();
-    setIngredientList([...ingredientList, {ingredientName, quantity, measurement, gramsPerCup, costPerGram}])
+    const totalIngredientCost = conversions.totalCost(quantity, measurement, costPerGram, gramsPerCup);
+    setTotalCost(totalIngredientCost);
+    setIngredientList([...ingredientList, {ingredientName, quantity, measurement, gramsPerCup, costPerGram, totalIngredientCost}])
   }
 
   const handleButton = (event) => {
@@ -56,12 +69,12 @@ export default function RecipeForm(props) {
 
         <h3>{recipeName}</h3>
         <h5>{recipeDescription}</h5>
-        {ingredientList.map((item)=>{
+        {ingredientList.map((item, index)=>{
           return (
-            <div key={item.id}> {item.ingredientName}: {item.quantity} {item.measurement} {item.costPerGram} {item.gramsPerCup} {item.cost}</div>
+            <div key={index}> {item.ingredientName}: {item.quantity} {item.measurement} {item.costPerGram} {item.gramsPerCup} {item.cost} COST = {item.totalIngredientCost}</div>
           )
         })}
-
+        <div>TOTAL COST: {totalCost}</div>
 
 
         <label>Ingredient:
@@ -71,6 +84,7 @@ export default function RecipeForm(props) {
               if (ingredientDropdown[i].name === event.target.value) {
                 setCostPerGram(ingredientDropdown[i].costpergram);
                 setGramsPerCup(ingredientDropdown[i].gramspercup);
+                setId(ingredientDropdown[i].id);
                 return;
               }
             }

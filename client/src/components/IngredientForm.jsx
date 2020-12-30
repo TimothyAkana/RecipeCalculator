@@ -144,7 +144,7 @@ export default function IngredientForm(props) {
       {purchased.map((item)=>{
         return (
           <div key={item.id}>
-            <div>{item.name}  /  {item.quantity}  /  {item.measurement}  /  ${item.cost} / ${item.costpergram} / ${item.gramspercup} </div>
+            <div>{item.name}  /  {item.quantity}  /  {item.measurement}  /  ${item.cost} / Cost Per Gram: ${item.costpergram} / Grams Per Cup: {item.gramspercup} </div>
           </div>
         )
       })}
