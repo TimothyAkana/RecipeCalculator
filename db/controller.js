@@ -3,8 +3,8 @@ const db = require('./connection.js');
 module.exports = {
   //Ingredient Methods
   addIngredient: (req, res) => {
-    const text = 'INSERT INTO recipe.ingredients (name, quantity, measurement, cost) VALUES ($1, $2, $3, $4) RETURNING *';
-    const values = [req.body.ingredient, req.body.quantity, req.body.measurement, req.body.cost];
+    const text = 'INSERT INTO recipe.ingredients (name, costpergram, quantity, measurement, cost, gramspercup) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+    const values = [req.body.ingredient, req.body.costPerGram, req.body.quantity, req.body.measurement, req.body.cost, req.body.gramsPerCup];
     db.query(text, values, (err, data) => {
       if (err) {console.log(err.stack)}
       else {res.json(data.rows)}

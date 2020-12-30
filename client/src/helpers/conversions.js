@@ -17,12 +17,14 @@ const tspConversions = {
 }
 
 module.exports.simplifyIngredient = (quantity, measurement) => {
+  let convertedQuantity;
+  let desiredMeasurement;
   if (gramConversions[measurement]) {
-    let convertedQuantity = quantity * gramConversions[measurement];
-    let desiredMeasurement = 'gram';
+    convertedQuantity = quantity * gramConversions[measurement];
+    desiredMeasurement = 'gram';
   } else {
-    let convertedQuantity = quantity * tspConversions[measurement];
-    let desiredMeasurement = 'teaspoon';
+    convertedQuantity = quantity * tspConversions[measurement];
+    desiredMeasurement = 'teaspoon';
   }
   return {quantity: convertedQuantity, measurement: desiredMeasurement};
 };
@@ -33,3 +35,18 @@ module.exports.makeReadable = (quantity, measurement, desiredMeasurement) => {
     : quantity / tspConversions[desiredMeasurement];
   return {quantity: convertedQuantity, measurement: desiredMeasurement};
 };
+
+module.exports.gramsPerCup = (volumeQuantity, volumeMeasurement, weightQuantity, weightMeasurement) => {
+  let grams = weightQuantity * gramConversions[weightMeasurement];
+  let cups = (volumeQuantity * tspConversions[volumeMeasurement]) / tspConversions['cup'];
+  return grams/cups;
+}
+
+module.exports.costPerGram = (quantity, measurement, cost, gramsPerCup) => {
+  if (gramConversions[measurement]) {
+    return cost / (quantity * gramConversions[measurement]);
+  } else {
+    let cups = (quantity * tspConversions[measurement]) / tspConversions['cup'];
+    return cost / (cups * gramsPerCup);
+  }
+}

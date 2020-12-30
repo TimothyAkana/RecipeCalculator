@@ -7,8 +7,8 @@ import RecipeForm from './RecipeForm.jsx';
 export default function App(props) {
   return (
     <div className="container">
-      <IngredientForm />
-      {/* <RecipeForm /> */}
+      {/* <IngredientForm /> */}
+      <RecipeForm />
     </div>
   )
 }

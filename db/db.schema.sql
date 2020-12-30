@@ -9,9 +9,11 @@ CREATE TYPE measurementOptions AS ENUM ('pound', 'ounce', 'kilogram', 'gram', 'g
 CREATE TABLE recipe.ingredients (
   id SERIAL PRIMARY KEY,
   name VARCHAR (50) NOT NULL,
+  costPerGram REAL NOT NULL,
   quantity SMALLINT NOT NULL,
   measurement measurementOptions NOT NULL,
-  cost REAL NOT NULL
+  cost REAL NOT NULL,
+  gramsPerCup REAL NOT NULL
 );
 
 CREATE TABLE recipe.details (

@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const dbController = require('../db/controller.js');
+const foodCentral = require('../foodCentral/fcAPI.js');
 
 const PORT = 3000;
 const PATH = path.join(__dirname, '/../client/dist');
@@ -17,5 +18,9 @@ app.post('*/ingredient', dbController.addIngredient);
 app.get('*/ingredient', dbController.getIngredient);
 app.patch('*/ingredient', dbController.patchIngredient);
 app.delete('*/ingredient', dbController.deleteIngredient);
+
+//FoodCentral API routes
+app.get('*/foodCentral/search/:ingredient', foodCentral.searchIngredients);
+app.get('*/foodCentral/info/:id', foodCentral.getIngredientInfo);
 
 app.listen(PORT, () => console.log('server is listening on port ', PORT));
