@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import IngredientForm from './IngredientForm.jsx';
 import RecipeForm from './RecipeForm.jsx';
+import Recipes from './Recipes.jsx';
 
 export default function App(props) {
   return (
     <div className="container">
-      <IngredientForm />
-      <RecipeForm />
+      {/* <IngredientForm />
+      <RecipeForm /> */}
+      <Recipes />
     </div>
   )
 }

@@ -54,8 +54,9 @@ export default function RecipeForm(props) {
       .then((result) => result.data[0].id)
       .then((recipeId) => {
         axios.post('/recipeQuantities', {recipeId: recipeId, ingredients: ingredientList})
+        .then((results) => console.log(results.data))
+        .catch((err) => console.log(err));
       })
-      .then((results) => console.log(results.data))
       .catch((err) => console.log(err));
   }
 

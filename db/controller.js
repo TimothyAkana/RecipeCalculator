@@ -34,6 +34,15 @@ module.exports = {
     })
   },
 
+  //Recipe CRUD
+  getRecipe: (req, res) => {
+    db.query(`SELECT d.id recipeId, d.name recipeName, d.description, i.name ingredientname, i.costPerGram, i.gramsPerCup, q.id quantityid, q.ingredientQuantity, q.ingredientMeasurement FROM recipe.ingredients i, recipe.details d, recipe.quantities q WHERE d.id = q.recipeId AND q.ingredientId = i.id AND d.id = ${req.params.recipeId}`, (err, data) => {
+      if (err) {console.log(err.stack)}
+      else {
+        res.json(data.rows)}
+    })
+  },
+
 
   //Recipe CRUD Operations
   addRecipeDetails: (req, res) => {
@@ -70,7 +79,6 @@ module.exports = {
 
 
   addRecipeQuantities: (req, res) => {
-    console.log(req.body);
     const values = [];
     req.body.ingredients.forEach(ingredient => {
       values.push([req.body.recipeId, ingredient.ingredientId, ingredient.quantity, ingredient.measurement]);

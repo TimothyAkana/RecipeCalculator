@@ -29,6 +29,9 @@ app.delete('*/recipeDetails', dbController.deleteRecipeDetails);
 app.post('*/recipeQuantities', dbController.addRecipeQuantities);
 app.delete('*/recipeQuantities', dbController.deleteRecipeQuantities);
 
+//Recipes
+app.get('*/recipe/:recipeId', dbController.getRecipe);
+
 //FoodCentral API routes
 app.get('*/foodCentral/search/:ingredient', foodCentral.searchIngredients);
 app.get('*/foodCentral/info/:id', foodCentral.getIngredientInfo);
