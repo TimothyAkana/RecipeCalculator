@@ -19,6 +19,16 @@ app.get('*/ingredient', dbController.getIngredient);
 app.patch('*/ingredient', dbController.patchIngredient);
 app.delete('*/ingredient', dbController.deleteIngredient);
 
+//Recipe Name
+app.post('*/recipeDetails', dbController.addRecipeDetails);
+app.get('*/recipeDetails', dbController.getRecipeDetails);
+app.patch('*/recipeDetails', dbController.patchRecipeDetails);
+app.delete('*/recipeDetails', dbController.deleteRecipeDetails);
+
+//Recipe Quantities
+app.post('*/recipeQuantities', dbController.addRecipeQuantities);
+app.delete('*/recipeQuantities', dbController.deleteRecipeQuantities);
+
 //FoodCentral API routes
 app.get('*/foodCentral/search/:ingredient', foodCentral.searchIngredients);
 app.get('*/foodCentral/info/:id', foodCentral.getIngredientInfo);

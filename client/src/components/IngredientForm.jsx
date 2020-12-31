@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useInput } from '../hooks/input.js';
 import measurements from '../helpers/measurements.js';
 import conversions from '../helpers/conversions.js';
 import axios from 'axios';

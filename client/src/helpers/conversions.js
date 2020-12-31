@@ -29,13 +29,6 @@ module.exports.simplifyIngredient = (quantity, measurement) => {
   return {quantity: convertedQuantity, measurement: desiredMeasurement};
 };
 
-module.exports.makeReadable = (quantity, measurement, desiredMeasurement) => {
-  let convertedQuantity = gramConversions[desiredMeasurement]
-    ? quantity / gramConversions[desiredMeasurement]
-    : quantity / tspConversions[desiredMeasurement];
-  return {quantity: convertedQuantity, measurement: desiredMeasurement};
-};
-
 module.exports.gramsPerCup = (volumeQuantity, volumeMeasurement, weightQuantity, weightMeasurement) => {
   let grams = weightQuantity * gramConversions[weightMeasurement];
   let cups = (volumeQuantity * tspConversions[volumeMeasurement]) / tspConversions['cup'];

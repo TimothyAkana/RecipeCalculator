@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useInput } from '../hooks/input.js';
 import measurements from '../helpers/measurements.js';
 import conversions from '../helpers/conversions.js';
 
@@ -18,7 +17,7 @@ export default function RecipeForm(props) {
   const [ totalCost, setTotalCost ] = useState(0);
   const [ costPerGram, setCostPerGram ] = useState('');
   const [ gramsPerCup, setGramsPerCup ] = useState('');
-  const [ id, setId] = useState('');
+  const [ ingredientId, setIngredientId] = useState('');
 
   //Populate List of Ingredients in Dropdown with ingredients from database
   const [ ingredientDropdown, setIngredientDropdown] = useState([]);
@@ -45,12 +44,19 @@ export default function RecipeForm(props) {
     event.preventDefault();
     const totalIngredientCost = conversions.totalCost(quantity, measurement, costPerGram, gramsPerCup);
     setTotalCost(totalIngredientCost);
-    setIngredientList([...ingredientList, {ingredientName, quantity, measurement, gramsPerCup, costPerGram, totalIngredientCost}])
+    setIngredientList([...ingredientList, {ingredientId, ingredientName, quantity, measurement, gramsPerCup, costPerGram, totalIngredientCost}])
   }
 
   const handleButton = (event) => {
     event.preventDefault();
-    console.log('submitting a recipe!');
+    let recipeId;
+    axios.post('/recipeDetails', {recipeName, recipeDescription})
+      .then((result) => result.data[0].id)
+      .then((recipeId) => {
+        axios.post('/recipeQuantities', {recipeId: recipeId, ingredients: ingredientList})
+      })
+      .then((results) => console.log(results.data))
+      .catch((err) => console.log(err));
   }
 
   return (
@@ -84,7 +90,7 @@ export default function RecipeForm(props) {
               if (ingredientDropdown[i].name === event.target.value) {
                 setCostPerGram(ingredientDropdown[i].costpergram);
                 setGramsPerCup(ingredientDropdown[i].gramspercup);
-                setId(ingredientDropdown[i].id);
+                setIngredientId(ingredientDropdown[i].id);
                 return;
               }
             }
