@@ -52,6 +52,9 @@ module.exports.foodNutrition = (foodPortionData) => {
 }
 
 module.exports.branded = (servingSize, servingUnit, householdText) => {
+  if (householdText === undefined) {
+    return undefined;
+  }
   let split = householdText.split(' ');
   let unit;
   if (split[0].indexOf('/') > -1) {
@@ -60,8 +63,8 @@ module.exports.branded = (servingSize, servingUnit, householdText) => {
   } else {
     unit = split[0];
   }
-  if (volumeOptions[split[1]]) {
-    const converted = volumeOptions[split[1]]
+  if (volumeOptions[split[1].toLowerCase()]) {
+    const converted = volumeOptions[split[1].toLowerCase()];
     const cups = (unit * tspConversions[converted]) / tspConversions['cup'];
     return Number(servingSize) / Number(cups);
   } else {

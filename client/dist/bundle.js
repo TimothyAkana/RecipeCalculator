@@ -164,7 +164,7 @@ eval("var gramConversions = {\n  pound: 453.592,\n  ounce: 28.34952,\n  kilogram
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("module.exports = {\n  mixed: ['gram', 'pound', 'ounce', 'kilogram', 'cup', 'teaspoon', 'tablespoon', 'fluidOunce', 'pint', 'quart', 'liter', 'gallon', 'unit'],\n  weight: ['gram', 'kilogram', 'pound', 'ounce'],\n  volume: ['cup', 'teaspoon', 'tablespoon', 'fluidOunce', 'pint', 'quart', 'liter', 'gallon', 'unit']\n};\n\n//# sourceURL=webpack:///./client/src/helpers/measurements.js?");
+eval("module.exports = {\n  mixed: ['gram', 'pound', 'ounce', 'kilogram', 'cup', 'teaspoon', 'tablespoon', 'fluidOunce', 'pint', 'quart', 'liter', 'gallon'],\n  weight: ['gram', 'kilogram', 'pound', 'ounce'],\n  volume: ['cup', 'teaspoon', 'tablespoon', 'fluidOunce', 'pint', 'quart', 'liter', 'gallon']\n};\n\n//# sourceURL=webpack:///./client/src/helpers/measurements.js?");
 
 /***/ }),
 

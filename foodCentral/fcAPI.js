@@ -17,7 +17,6 @@ module.exports = {
   getIngredientInfo: (req, res) => {
     axios.get(`https://api.nal.usda.gov/fdc/v1/food/${req.params.id}?api_key=${API_KEY}`)
     .then((results) => {
-      console.log(results.data);
       let info;
       if (results.data.dataType === 'Branded') {
         info = {

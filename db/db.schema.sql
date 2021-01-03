@@ -10,23 +10,23 @@ CREATE TABLE recipe.ingredients (
   id SERIAL PRIMARY KEY,
   name VARCHAR (50) NOT NULL,
   costPerGram REAL NOT NULL,
-  quantity SMALLINT NOT NULL,
+  quantity REAL NOT NULL,
   measurement measurementOptions NOT NULL,
   cost REAL NOT NULL,
-  gramsPerCup REAL NOT NULL
+  gramsPerCup REAL
 );
 
 CREATE TABLE recipe.details (
   id SERIAL PRIMARY KEY,
   name VARCHAR (50) NOT NULL,
-  description TEXT NOT NULL
+  description TEXT
 );
 
 CREATE TABLE recipe.quantities (
   id SERIAL PRIMARY KEY,
   recipeId INT NOT NULL,
   ingredientId INT NOT NULL,
-  ingredientQuantity SMALLINT NOT NULL,
+  ingredientQuantity REAL NOT NULL,
   ingredientMeasurement measurementOptions NOT NULL,
   CONSTRAINT recipeId
     FOREIGN KEY (recipeId)
