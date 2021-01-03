@@ -75,67 +75,108 @@ export default function IngredientForm(props) {
   return (
     <div>
       <h2>Ingredient Form</h2>
-      <form onSubmit={handleSearch}>
-        <label>Search for Ingredient: <input type="text" value={search} onChange={() => setSearch(event.target.value)}/></label>
-        <input type="submit" value="Search" />
+      {/* Search Bar Form */}
+      <form className="d-flex" onSubmit={handleSearch}>
+        <input className="form-control me-2" type="search" placeholder="Search For Ingredients" aria-label="Search" value={search} onChange={() => setSearch(event.target.value)}/>
+        <button className="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalCenter" type="submit">Search</button>
       </form>
+      <hr />
+      <br />
+      {/* Ingredient Select Modal */}
+      <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalCenterTitle">Ingredients</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              {searchOptions.map((item)=>{
+                return (
+                  <div key={item.id} data-dismiss="modal" onClick={() => handleLookup(event, item.id)}>{item.id}  /  {item.item}  /  {item.brand}</div>
+                )
+              })}
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      {searchOptions.map((item)=>{
-        return (
-          <div key={item.id} onClick={() => handleLookup(event, item.id)}>{item.id}  /  {item.item}  /  {item.brand}</div>
-        )
-      })}
 
 
-
+      {/* Ingredient Form */}
       <form onSubmit={handleSubmit}>
-        <label>Ingredient:
-          <input type="text" value={ingredient} onChange={() => setIngredient(event.target.value)}/>
-        </label>
-        <label>Quantity:
-          <input type="number" value={quantity} onChange={() => setQuantity(Number(event.target.value))}/>
-        </label>
-        <label>Measurement:
-          <select value={measurement} onChange={() => setMeasurement(event.target.value)}>
-            {measurements.mixed.map((measurement) => {
-              return (
-                <option value={measurement} key={measurement}>{measurement}</option>
-              )
-            })}
-          </select>
-        </label>
-        <label>Cost (in $):
-          <input type="number" value={cost} onChange={() => setCost(Number(event.target.value))}/>
-        </label>
+        <div className="form-row">
+          <div className="form-group col-12">
+            <label>Ingredient:</label>
+              <input className="form-control" type="text" value={ingredient} onChange={() => setIngredient(event.target.value)}/>
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group col-4">
+              <label>Quantity:</label>
+              <input className="form-control" type="number" value={quantity} onChange={() => setQuantity(Number(event.target.value))}/>
+            </div>
+            <div className="form-group col-2">
+              <label>Measurement:</label>
+              <select className="form-select form-control" value={measurement} onChange={() => setMeasurement(event.target.value)}>
+                  {measurements.mixed.map((measurement) => {
+                    return (
+                      <option value={measurement} key={measurement}>{measurement}</option>
+                    )
+                  })}
+              </select>
+            </div>
+          <div className="form-group col-6">
+            <label>Cost (in $):</label>
+            <input className="form-control" type="number" value={cost} onChange={() => setCost(Number(event.target.value))}/>
+          </div>
 
 
-
-        <label>Conversion Factor:</label>
-        <label>Amount:
-          <input type="number" value={volumeQuantity} onChange={() => setVolumeQuantity(event.target.value)}/>
-        </label>
-        <label>Volume:
-          <select value={volumeUnit} onChange={() => setVolumeUnit(event.target.value)}>
-            {measurements.volume.map((measurement) => {
-              return (
+        </div>
+        <div className="form-row">
+          <div className="form-group col-12">
+            <h4>Conversion Factor:</h4>
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group col-3">
+            <label>Volume:</label>
+            <input className="form-control" type="number" value={volumeQuantity} onChange={() => setVolumeQuantity(event.target.value)}/>
+          </div>
+          <div className="form-group col-2">
+            <label>Measurement:</label>
+            <select className="form-select form-control" value={volumeUnit} onChange={() => setVolumeUnit(event.target.value)}>
+              {measurements.volume.map((measurement) => {
+                return (
                 <option value={measurement} key={measurement}>{measurement}</option>
               )
-            })}
-          </select>
-        </label>
-        =
-        <label>Amount:
-          <input type="number" value={weightQuantity} onChange={() => setWeightQuantity(event.target.value)}/>
-        </label>
-        <label>Weight:
-          <select value={weightUnit} onChange={() => setWeightUnit(event.target.value)}>
-            {measurements.weight.map((measurement) => {
-              return (
-                <option value={measurement} key={measurement}>{measurement}</option>
-              )
-            })}
-          </select>
-        </label>
+              })}
+            </select>
+          </div>
+          <div className="form-group col-2">
+            <label></label>
+            <h2 className="text-center">=</h2>
+          </div>
+          <div className="form-group col-3">
+            <label>Weight:</label>
+            <input className="form-control" type="number" value={weightQuantity} onChange={() => setWeightQuantity(event.target.value)}/>
+          </div>
+          <div className="form-group col-2">
+            <label>Measurement:</label>
+            <select className="form-select form-control" value={weightUnit} onChange={() => setWeightUnit(event.target.value)}>
+              {measurements.weight.map((measurement) => {
+                return (
+                  <option value={measurement} key={measurement}>{measurement}</option>
+                )
+              })}
+            </select>
+          </div>
+        </div>
         <input type="submit" value="Submit" />
       </form>
 

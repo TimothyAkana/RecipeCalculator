@@ -45,6 +45,9 @@ export default function RecipeForm(props) {
     const totalIngredientCost = conversions.totalCost(quantity, measurement, costPerGram, gramsPerCup);
     setTotalCost(totalIngredientCost);
     setIngredientList([...ingredientList, {ingredientId, ingredientName, quantity, measurement, gramsPerCup, costPerGram, totalIngredientCost}])
+    setIngredientName('');
+    setQuantity('');
+    setMeasurement('');
   }
 
   const handleButton = (event) => {
@@ -61,31 +64,21 @@ export default function RecipeForm(props) {
   }
 
   return (
-    <div>
-      <h2>Create A New Recipe</h2>
-      <form onSubmit={handleSubmit}>
-
-        <label>Recipe Name:
-          <input type="text" value={recipeName} onChange={() => setRecipeName(event.target.value)}/>
-        </label>
-
-        <label>Recipe Description:
-          <input type="text" value={recipeDescription} onChange={() => setRecipeDescription(event.target.value)}/>
-        </label>
-
-
-        <h3>{recipeName}</h3>
-        <h5>{recipeDescription}</h5>
-        {ingredientList.map((item, index)=>{
-          return (
-            <div key={index}> {item.ingredientName}: {item.quantity} {item.measurement} {item.costPerGram} {item.gramsPerCup} {item.cost} COST = {item.totalIngredientCost}</div>
-          )
-        })}
-        <div>TOTAL COST: {totalCost}</div>
-
-
-        <label>Ingredient:
-          <select value={ingredientName} onChange={() => {
+    <div className="parent-container d-flex col-6">
+      <form onSubmit={handleSubmit} className="col-12">
+        <h3><em>Create A New Recipe</em></h3>
+          <div className="form-group mb-3">
+            <label className="form-label">Recipe Name</label>
+            <input type="text" className="form-control" value={recipeName} onChange={() => setRecipeName(event.target.value)}/>
+          </div>
+        <div className="mb-3">
+          <label className="form-label">Description</label>
+          <textarea className="form-control" rows="3" value={recipeDescription} onChange={() => setRecipeDescription(event.target.value)}></textarea>
+        </div>
+        <hr />
+        <div className="form-group mb-3">
+        <label>Ingredient:</label>
+          <select className="form-select form-control" value={ingredientName} onChange={() => {
             setIngredientName(event.target.value)
             for (var i = 0; i < ingredientDropdown.length; i++) {
               if (ingredientDropdown[i].name === event.target.value) {
@@ -102,24 +95,62 @@ export default function RecipeForm(props) {
               )
             })}
           </select>
-        </label>
-
-        <label>Quantity:
-          <input type="number" value={quantity} onChange={() => setQuantity(event.target.value)}/>
-        </label>
-
-        <label>Measurement:
-          <select value={measurement} onChange={() => setMeasurement(event.target.value)}>
-            {measurements.mixed.map((measurement) => {
-              return (
-                <option value={measurement} key={measurement}>{measurement}</option>
-              )
-            })}
-          </select>
-        </label>
+        </div>
+        <div className="form-row">
+          <div className="col-6">
+          <label>Quantity:</label>
+            <input className="form-select form-control mb-1" type="number" value={quantity} onChange={() => setQuantity(event.target.value)}/>
+          </div>
+          <div className="col-6">
+            <label>Measurement:</label>
+            <select className="form-select form-control" value={measurement} onChange={() => setMeasurement(event.target.value)}>
+              {measurements.mixed.map((measurement) => {
+                return (
+                  <option value={measurement} key={measurement}>{measurement}</option>
+                )
+              })}
+            </select>
+          </div>
+        </div>
         <input type="submit" value="Add Ingredient" />
       </form>
-      <button onClick={handleButton}>CREATE RECIPE</button>
+
+      {/* Right Side of Page: Recipe Preview */}
+      <div className="container col-12">
+        <div className="col-lg-12">
+          <h3><em>Recipe Preview:</em></h3>
+          <h2>{recipeName === '' ? 'New Recipe Name' : recipeName}</h2>
+            <h5>{recipeDescription === '' ? 'Short description of the new recipe!' : recipeDescription}</h5>
+            <table className="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Ingredient</th>
+                  <th scope="col">Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ingredientList.map((item, index)=>{
+                  return (
+                    <tr key={index}>
+                      <td>{item.quantity} {item.measurement}</td>
+                      <td>{item.ingredientName}</td>
+                      <td>{'$' + (Math.round( item.totalIngredientCost * 100 + Number.EPSILON) / 100).toFixed(2)}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td></td>
+                  <td className="text-right">TOTAL COST:</td>
+                  <td>${totalCost.toFixed(2)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          <button className="float-right" onClick={handleButton}>CREATE RECIPE</button>
+        </div>
+      </div>
     </div>
   )
 }
