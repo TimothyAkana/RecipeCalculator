@@ -89,6 +89,7 @@ export default function RecipeForm(props) {
               }
             }
           }}>
+            <option selected>Select an ingredient</option>
             {ingredientDropdown.map((item) => {
               return (
                 <option value={item.name} key={item.id}>{item.name}</option>
@@ -118,7 +119,6 @@ export default function RecipeForm(props) {
       {/* Right Side of Page: Recipe Preview */}
       <div className="container col-12">
         <div className="col-lg-12">
-          <h3><em>Recipe Preview:</em></h3>
           <h2>{recipeName === '' ? 'New Recipe Name' : recipeName}</h2>
             <h5>{recipeDescription === '' ? 'Short description of the new recipe!' : recipeDescription}</h5>
             <table className="table table-striped">

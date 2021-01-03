@@ -72,122 +72,160 @@ export default function IngredientForm(props) {
       .catch((err) => console.log(err));
   }
 
+  //inline styling
+  const containerHeight = {
+    height: "100vh"
+  }
+  const overflowBox = {
+    height: "60vh",
+    overflowY: "auto"
+  }
+  const overflowModal = {
+    maxHeight: "80vh",
+    overflowY: "auto"
+  }
+
   return (
     <div>
-      <h2>Ingredient Form</h2>
-      {/* Search Bar Form */}
-      <form className="d-flex" onSubmit={handleSearch}>
-        <input className="form-control me-2" type="search" placeholder="Search For Ingredients" aria-label="Search" value={search} onChange={() => setSearch(event.target.value)}/>
-        <button className="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalCenter" type="submit">Search</button>
-      </form>
-      <hr />
-      <br />
-      {/* Ingredient Select Modal */}
-      <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalCenterTitle">Ingredients</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              {searchOptions.map((item)=>{
-                return (
-                  <div key={item.id} data-dismiss="modal" onClick={() => handleLookup(event, item.id)}>{item.id}  /  {item.item}  /  {item.brand}</div>
-                )
-              })}
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+      <div className="col-12">
+        <h2>Ingredients</h2>
+        {/* Search Bar Form */}
+        <form className="d-flex" onSubmit={handleSearch}>
+          <input className="form-control me-2" type="search" placeholder="Search For Ingredients to auto-populate name and conversion factor" aria-label="Search" value={search} onChange={() => setSearch(event.target.value)}/>
+          <button className="btn btn-outline-success" data-toggle="modal" data-target="#exampleModalCenter" type="submit">Search</button>
+        </form>
+        <hr />
+
+        {/* Ingredient Select Modal */}
+        <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog"  aria-hidden="true">
+          <div className="modal-dialog modal-dialog-scrollable" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Ingredients</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body" style={overflowModal}>
+                <div class="list-group">
+                  {searchOptions.map((item) =>{
+                    return (
+                      <button type="button" class="list-group-item list-group-item-action" key={item.id} data-dismiss="modal" onClick={() => handleLookup(event, item.id)}>{item.item}</button>
+                    )
+                  })}
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-
-
-      {/* Ingredient Form */}
-      <form onSubmit={handleSubmit}>
-        <div className="form-row">
-          <div className="form-group col-12">
-            <label>Ingredient:</label>
-              <input className="form-control" type="text" value={ingredient} onChange={() => setIngredient(event.target.value)}/>
-          </div>
-        </div>
-        <div className="form-row">
-          <div className="form-group col-4">
-              <label>Quantity:</label>
-              <input className="form-control" type="number" value={quantity} onChange={() => setQuantity(Number(event.target.value))}/>
+      {/* Left Side is Ingredient Form */}
+      <div className="parent-container d-flex col-6">
+        <form onSubmit={handleSubmit} className="col-12">
+          <div className="form-row">
+            <div className="form-group col-12">
+              <label>Ingredient:</label>
+                <input className="form-control" type="text" value={ingredient} onChange={() => setIngredient(event.target.value)}/>
             </div>
+          </div>
+          <div className="form-row">
+            <div className="form-group col-3">
+                <label>Quantity:</label>
+                <input className="form-control" type="number" value={quantity} onChange={() => setQuantity(Number(event.target.value))}/>
+              </div>
+              <div className="form-group col-3">
+                <label>Measurement:</label>
+                <select className="form-select form-control" value={measurement} onChange={() => setMeasurement(event.target.value)}>
+                    {measurements.mixed.map((measurement) => {
+                      return (
+                        <option value={measurement} key={measurement}>{measurement}</option>
+                      )
+                    })}
+                </select>
+              </div>
+            <div className="form-group col-6">
+              <label>Cost (in $):</label>
+              <input className="form-control" type="number" value={cost} onChange={() => setCost(Number(event.target.value))}/>
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="form-group col-12">
+              <h4>Conversion Factor:</h4>
+            </div>
+          </div>
+          <div className="form-row">
             <div className="form-group col-2">
-              <label>Measurement:</label>
-              <select className="form-select form-control" value={measurement} onChange={() => setMeasurement(event.target.value)}>
-                  {measurements.mixed.map((measurement) => {
-                    return (
-                      <option value={measurement} key={measurement}>{measurement}</option>
-                    )
-                  })}
-              </select>
+              <label>Volume:</label>
+              <input className="form-control" type="number" value={volumeQuantity} onChange={() => setVolumeQuantity(event.target.value)}/>
             </div>
-          <div className="form-group col-6">
-            <label>Cost (in $):</label>
-            <input className="form-control" type="number" value={cost} onChange={() => setCost(Number(event.target.value))}/>
-          </div>
-
-
-        </div>
-        <div className="form-row">
-          <div className="form-group col-12">
-            <h4>Conversion Factor:</h4>
-          </div>
-        </div>
-        <div className="form-row">
-          <div className="form-group col-3">
-            <label>Volume:</label>
-            <input className="form-control" type="number" value={volumeQuantity} onChange={() => setVolumeQuantity(event.target.value)}/>
-          </div>
-          <div className="form-group col-2">
-            <label>Measurement:</label>
-            <select className="form-select form-control" value={volumeUnit} onChange={() => setVolumeUnit(event.target.value)}>
-              {measurements.volume.map((measurement) => {
-                return (
-                <option value={measurement} key={measurement}>{measurement}</option>
-              )
-              })}
-            </select>
-          </div>
-          <div className="form-group col-2">
-            <label></label>
-            <h2 className="text-center">=</h2>
-          </div>
-          <div className="form-group col-3">
-            <label>Weight:</label>
-            <input className="form-control" type="number" value={weightQuantity} onChange={() => setWeightQuantity(event.target.value)}/>
-          </div>
-          <div className="form-group col-2">
-            <label>Measurement:</label>
-            <select className="form-select form-control" value={weightUnit} onChange={() => setWeightUnit(event.target.value)}>
-              {measurements.weight.map((measurement) => {
-                return (
+            <div className="form-group col-3">
+              <label>Unit:</label>
+              <select className="form-select form-control" value={volumeUnit} onChange={() => setVolumeUnit(event.target.value)}>
+                {measurements.volume.map((measurement) => {
+                  return (
                   <option value={measurement} key={measurement}>{measurement}</option>
                 )
-              })}
-            </select>
+                })}
+              </select>
+            </div>
+            <div className="form-group col-2">
+              <label></label>
+              <h2 className="text-center">=</h2>
+            </div>
+            <div className="form-group col-2">
+              <label>Weight:</label>
+              <input className="form-control" type="number" value={weightQuantity} onChange={() => setWeightQuantity(event.target.value)}/>
+            </div>
+            <div className="form-group col-3">
+              <label>Unit:</label>
+              <select className="form-select form-control" value={weightUnit} onChange={() => setWeightUnit(event.target.value)}>
+                {measurements.weight.map((measurement) => {
+                  return (
+                    <option value={measurement} key={measurement}>{measurement}</option>
+                  )
+                })}
+              </select>
+            </div>
+          </div>
+          <input type="submit" value="Submit Ingredient" />
+        </form>
+
+        {/* Right Side is List of purchased Ingredients */}
+        <div className="container col-12" style={containerHeight}>
+          <div className="col-lg-12">
+            <h2>Ingredient Inventory</h2>
+            <div style={overflowBox}>
+              <table className="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Ingredient Name</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                {purchased.map((item)=>{
+                  return (
+                    // <div key={item.id}>
+                    //   <div>{item.name}  /  {item.quantity}  /  {item.measurement}  /  ${item.cost} / Cost Per Gram: ${item.costpergram} / Grams Per Cup: {item.gramspercup} </div>
+                    // </div>
+                    <tr>
+                      <td>{item.name}</td>
+                      <td>{item.quantity} {item.measurement}</td>
+                      <td>${item.cost}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+              </table>
+            </div>
           </div>
         </div>
-        <input type="submit" value="Submit" />
-      </form>
-
-
-      {purchased.map((item)=>{
-        return (
-          <div key={item.id}>
-            <div>{item.name}  /  {item.quantity}  /  {item.measurement}  /  ${item.cost} / Cost Per Gram: ${item.costpergram} / Grams Per Cup: {item.gramspercup} </div>
-          </div>
-        )
-      })}
+      </div>
     </div>
   )
 }
