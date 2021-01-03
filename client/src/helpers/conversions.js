@@ -12,6 +12,7 @@ const tspConversions = {
   pint: 96,
   cup: 48,
   fluidOunce: 6,
+  milliliter: 4.92892,
   tablespoon: 3,
   teaspoon: 1,
 }

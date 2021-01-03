@@ -41,8 +41,9 @@ export default function IngredientForm(props) {
   const [ filter, setFilter ] = useState('');
   const filterWords = (event) => {
     event.preventDefault();
+    console.log(searchOptions);
     let filtered = searchOptions.filter(entry => {
-      return entry.item.toLowerCase().indexOf(filter.toLowerCase()) > -1;
+      return ((entry.item.toLowerCase().indexOf(filter.toLowerCase()) > -1) || (entry.brand === undefined ? null : (entry.brand.toLowerCase().indexOf(filter.toLowerCase()) > -1)));
     })
     setSearchOptions(filtered);
   }
@@ -55,10 +56,16 @@ export default function IngredientForm(props) {
         setSearchOptions([]);
         setSearch('');
         setIngredient(result.data.name);
-        setVolumeQuantity(1);
-        setVolumeUnit('cup');
-        setWeightQuantity(result.data.gramsPerCup);
         setWeightUnit('gram');
+        if (result.data.gramsPerCup === undefined) {
+          setVolumeQuantity(0);
+          setVolumeUnit('unit');
+          setWeightQuantity(0);
+        } else {
+          setVolumeQuantity(1);
+          setVolumeUnit('cup');
+          setWeightQuantity(result.data.gramsPerCup);
+        }
       })
       .catch((err) => console.log(err));
   }
@@ -119,7 +126,7 @@ export default function IngredientForm(props) {
                 <div className="list-group">
                   {searchOptions.map((item) =>{
                     return (
-                      <button type="button" className="list-group-item list-group-item-action" key={item.id} data-dismiss="modal" onClick={() => handleLookup(event, item.id)}>{item.item}</button>
+                      <button type="button" className="list-group-item list-group-item-action" key={item.id} data-dismiss="modal" onClick={() => handleLookup(event, item.id)}>{item.item}{item.brand === undefined ? null : `   (${item.brand})`}</button>
                     )
                   })}
                 </div>
@@ -223,9 +230,6 @@ export default function IngredientForm(props) {
               <tbody>
                 {purchased.map((item)=>{
                   return (
-                    // <div key={item.id}>
-                    //   <div>{item.name}  /  {item.quantity}  /  {item.measurement}  /  ${item.cost} / Cost Per Gram: ${item.costpergram} / Grams Per Cup: {item.gramspercup} </div>
-                    // </div>
                     <tr key={item.name}>
                       <td>{item.name}</td>
                       <td>{item.quantity} {item.measurement}</td>
