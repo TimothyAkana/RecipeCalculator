@@ -5,8 +5,8 @@ import axios from 'axios';
 
 export default function IngredientForm(props) {
   //Ingredient Search Form
-  const [searchOptions, setSearchOptions] = useState([]);
-  const [search, setSearch] = useState('');
+  const [ searchOptions, setSearchOptions ] = useState([]);
+  const [ search, setSearch ] = useState('');
 
   //Ingredient Purchase Info
   const [ingredient, setIngredient] = useState('');
@@ -36,6 +36,15 @@ export default function IngredientForm(props) {
     axios.get(`/foodCentral/search/${search}`)
       .then((result) => setSearchOptions(result.data))
       .catch((err) => console.log(err));
+  }
+  //Filter Search Results
+  const [ filter, setFilter ] = useState('');
+  const filterWords = (event) => {
+    event.preventDefault();
+    let filtered = searchOptions.filter(entry => {
+      return entry.item.toLowerCase().indexOf(filter.toLowerCase()) > -1;
+    })
+    setSearchOptions(filtered);
   }
 
   //Lookup Ingredient details from database
@@ -81,7 +90,7 @@ export default function IngredientForm(props) {
     overflowY: "auto"
   }
   const overflowModal = {
-    maxHeight: "80vh",
+    maxHeight: "50vh",
     overflowY: "auto"
   }
 
@@ -107,15 +116,19 @@ export default function IngredientForm(props) {
                 </button>
               </div>
               <div className="modal-body" style={overflowModal}>
-                <div class="list-group">
+                <div className="list-group">
                   {searchOptions.map((item) =>{
                     return (
-                      <button type="button" class="list-group-item list-group-item-action" key={item.id} data-dismiss="modal" onClick={() => handleLookup(event, item.id)}>{item.item}</button>
+                      <button type="button" className="list-group-item list-group-item-action" key={item.id} data-dismiss="modal" onClick={() => handleLookup(event, item.id)}>{item.item}</button>
                     )
                   })}
                 </div>
               </div>
               <div className="modal-footer">
+                <form className="d-flex">
+                  <input className="form-control me-2" type="search" placeholder="Filter" value={filter} onChange={() => setFilter(event.target.value)}aria-label="Search" />
+                  <button className="btn btn-outline-success" type="submit" onClick={filterWords}>Filter</button>
+                </form>
                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
             </div>
@@ -213,7 +226,7 @@ export default function IngredientForm(props) {
                     // <div key={item.id}>
                     //   <div>{item.name}  /  {item.quantity}  /  {item.measurement}  /  ${item.cost} / Cost Per Gram: ${item.costpergram} / Grams Per Cup: {item.gramspercup} </div>
                     // </div>
-                    <tr>
+                    <tr key={item.name}>
                       <td>{item.name}</td>
                       <td>{item.quantity} {item.measurement}</td>
                       <td>${item.cost}</td>

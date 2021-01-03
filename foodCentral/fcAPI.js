@@ -5,7 +5,7 @@ const gramConversion = require('./helpers/gramConversion.js');
 module.exports = {
   //Ingredient Methods
   searchIngredients: (req, res) => {
-    axios.get(`https://api.nal.usda.gov/fdc/v1/foods/search?query=+"(${req.params.ingredient})"&pageSize=200&dataType=Survey%20(FNDDS)&api_key=${API_KEY}`)
+    axios.get(`https://api.nal.usda.gov/fdc/v1/foods/search?query=+"(${req.params.ingredient})"&pageSize=500&dataType=Survey%20(FNDDS)&api_key=${API_KEY}`)
       .then((results) => {
         let formattedData = results.data.foods.map((food) => {
           return {id: food.fdcId, item: food.description}

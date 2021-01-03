@@ -47,7 +47,7 @@ export default function RecipeForm(props) {
     setIngredientList([...ingredientList, {ingredientId, ingredientName, quantity, measurement, gramsPerCup, costPerGram, totalIngredientCost}])
     setIngredientName('');
     setQuantity('');
-    setMeasurement('');
+    setMeasurement('gram');
   }
 
   const handleButton = (event) => {
@@ -89,7 +89,7 @@ export default function RecipeForm(props) {
               }
             }
           }}>
-            <option selected>Select an ingredient</option>
+            <option value="Select an Ingredient">Select an ingredient</option>
             {ingredientDropdown.map((item) => {
               return (
                 <option value={item.name} key={item.id}>{item.name}</option>
@@ -135,7 +135,7 @@ export default function RecipeForm(props) {
                     <tr key={index}>
                       <td>{item.quantity} {item.measurement}</td>
                       <td>{item.ingredientName}</td>
-                      <td>{'$' + (Math.round( item.totalIngredientCost * 100 + Number.EPSILON) / 100).toFixed(2)}</td>
+                      <td>{'$' + (Math.round( Number(item.totalIngredientCost) * 100 + Number.EPSILON) / 100).toFixed(2)}</td>
                     </tr>
                   )
                 })}
