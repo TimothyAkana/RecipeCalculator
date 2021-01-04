@@ -11,9 +11,9 @@ export default function App(props) {
   return (
     <div className="container">
       <Navbar setPage={setPage} setSignedIn={setSignedIn} signedIn={signedIn} />
-      {page==='recipes' ? <Recipes /> : null}
-      {page==='ingredientform' ? <IngredientForm /> : null}
-      {page==='recipeform' ? <RecipeForm /> : null}
+      {page ==='recipes' ? <Recipes /> : null}
+      {page ==='ingredientform' ? <IngredientForm /> : null}
+      {page ==='recipeform' ? <RecipeForm /> : null}
     </div>
   )
 }

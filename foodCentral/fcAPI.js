@@ -7,6 +7,7 @@ module.exports = {
   searchIngredients: (req, res) => {
     axios.get(`https://api.nal.usda.gov/fdc/v1/foods/search?query=+"(${req.params.ingredient})"&pageSize=500&dataType=Branded,Survey%20(FNDDS)&api_key=${API_KEY}`)
       .then((results) => {
+        console.log(results.data);
         let formattedData = results.data.foods.map((food) => {
           return {id: food.fdcId, item: food.lowercaseDescription, brand: food.brandOwner}
         })

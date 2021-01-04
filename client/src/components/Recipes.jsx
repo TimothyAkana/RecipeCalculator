@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import conversions from "../helpers/conversions.js";
+import measurements from "../helpers/measurements.js"
 
 export default function Recipes(props) {
   //Populate List of Recipes initially
@@ -20,6 +21,24 @@ export default function Recipes(props) {
       .then((result) => setLoadedRecipe(result.data))
       .catch((err) => console.log(err));
   }
+
+  const [ modifiedIndex, setModifiedIndex ] = useState('');
+  const [ quantity, setQuantity ] = useState('');
+  const [ measurement, setMeasurement ] = useState('gram');
+  const [ counter, setCounter ] = useState(0);
+  const modifyIngredient = () => {
+    let newRecipe = loadedRecipe;
+    newRecipe[modifiedIndex].ingredientquantity = quantity;
+    newRecipe[modifiedIndex].ingredientmeasurement = measurement;
+    setLoadedRecipe(newRecipe);
+    setCounter(counter + 1);
+    setQuantity('');
+    setMeasurement('gram');
+  }
+
+  useEffect(() => {
+    setLoadedRecipe(loadedRecipe);
+  }, [counter]);
 
   //inline styling
   const containerHeight = {
@@ -56,10 +75,10 @@ export default function Recipes(props) {
             </tr>
           </thead>
           <tbody>
-            {loadedRecipe.map((ingredient) => {
+            {loadedRecipe.map((ingredient, index) => {
               return (
-                <tr key={ingredient.ingredientname}>
-                  <td>{ingredient.ingredientquantity} {ingredient.ingredientmeasurement}</td>
+                <tr key={index}>
+                  <td data-toggle="modal" data-target="#quantityModal" onClick={() => setModifiedIndex(index)}>{ingredient.ingredientquantity} {ingredient.ingredientmeasurement}</td>
                   <td>{ingredient.ingredientname}</td>
                   <td>{'$' + (Math.round((conversions.totalCost(ingredient.ingredientquantity, ingredient.ingredientmeasurement, ingredient.costpergram, ingredient.gramspercup)) * 100 + Number.EPSILON) / 100).toFixed(2)}</td>
                 </tr>
@@ -78,6 +97,44 @@ export default function Recipes(props) {
           </tfoot>
         </table>
       </div>
+
+      {/* Change Quantity Modal */}
+      <div className="modal fade" id="quantityModal" tabIndex="-1" role="dialog" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Modify Quantity of {loadedRecipe[modifiedIndex] ? loadedRecipe[modifiedIndex].ingredientname : null}</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <div>Current =   {loadedRecipe[modifiedIndex] ? `${loadedRecipe[modifiedIndex].ingredientquantity} ${loadedRecipe[modifiedIndex].ingredientmeasurement}` : null}</div>
+              <div className="form-row">
+              <div className="form-group col-4">
+                  <label>New Quantity:</label>
+                  <input className="form-control" type="number" value={quantity} onChange={() => setQuantity(Number(event.target.value))}/>
+                </div>
+                <div className="form-group col-4">
+                  <label>New Measurement:</label>
+                  <select className="form-select form-control" value={measurement} onChange={() => setMeasurement(event.target.value)}>
+                      {measurements.mixed.map((measurement) => {
+                        return (
+                          <option value={measurement} key={measurement}>{measurement}</option>
+                        )
+                      })}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={modifyIngredient}>Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   )
 }
