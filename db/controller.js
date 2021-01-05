@@ -18,8 +18,8 @@ module.exports = {
     })
   },
   patchIngredient: (req, res) => {
-    const text = 'UPDATE recipe.ingredients SET name = ($2), quantity = ($3), measurement = ($4), cost = ($5) WHERE id = ($1)';
-    const values = [req.body.id, req.body.ingredient, req.body.quantity, req.body.measurement, req.body.cost];
+    const text = 'UPDATE recipe.ingredients SET name = ($2), costpergram = ($3), quantity = ($4), measurement = ($5), cost = ($6), gramspercup = ($7) WHERE id = ($1)';
+    const values = [req.body.id, req.body.ingredient, req.body.costPerGram, req.body.quantity, req.body.measurement, req.body.cost, req.body.gramsPerCup];
     db.query(text, values, (err, data) => {
       if (err) {console.log(err.stack)}
       else {res.send(req.body)}

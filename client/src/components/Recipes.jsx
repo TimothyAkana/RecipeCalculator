@@ -56,7 +56,7 @@ export default function Recipes(props) {
         {recipes.map(recipe => {
           return (
             <button
-              // type="button"
+              type="button"
               className="list-group-item list-group-item-action"
               key={recipe.id}
               value={recipe.id}

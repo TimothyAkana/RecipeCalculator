@@ -58,13 +58,12 @@ export default function IngredientForm(props) {
         setSearch('');
         setIngredient(result.data.name);
         setWeightUnit('gram');
+        setVolumeUnit('cup');
         if (result.data.gramsPerCup === undefined) {
           setVolumeQuantity(0);
-          setVolumeUnit('unit');
           setWeightQuantity(0);
         } else {
           setVolumeQuantity(1);
-          setVolumeUnit('cup');
           setWeightQuantity(result.data.gramsPerCup);
         }
       })
@@ -87,6 +86,45 @@ export default function IngredientForm(props) {
         setWeightQuantity('');
       })
       .catch((err) => console.log(err));
+  }
+
+  // Modify Ingredient
+  const [ id, setId ] = useState(0);
+  const handleUpdate = (event, item) => {
+    event.preventDefault();
+    setIngredient(item.name);
+    setQuantity(item.quantity);
+    setMeasurement(item.measurement);
+    setCost(item.cost);
+    setVolumeQuantity(item.gramspercup ? 1 : 0);
+    setVolumeUnit('cup');
+    setWeightQuantity(item.gramspercup ? item.gramspercup : 0);
+    setWeightUnit('gram');
+    setId(item.id);
+  }
+  // Submits Ingredient Update to database
+  const submitUpdate = (event) => {
+    event.preventDefault();
+    const gramsPerCup = conversions.gramsPerCup(volumeQuantity, volumeUnit, weightQuantity, weightUnit)
+    const costPerGram = conversions.costPerGram(quantity, measurement, cost, gramsPerCup);
+    const newIngredient = {id, ingredient, costPerGram, quantity, measurement, cost, gramsPerCup};
+    axios.patch('/ingredient', newIngredient)
+      .then(result => axios.get('/ingredient')
+        .then((res) => {
+          setPurchased(res.data);
+        }))
+      .catch((err) => console.log(err));
+  }
+
+  const cancelUpdate = (event) => {
+    event.preventDefault();
+    setIngredient('');
+    setQuantity('');
+    setCost('');
+    setVolumeQuantity('');
+    setWeightQuantity('');
+    setVolumeUnit('cup');
+    setWeightUnit('gram');
   }
 
   // inline styling
@@ -231,7 +269,7 @@ export default function IngredientForm(props) {
               <tbody>
                 {purchased.map((item)=>{
                   return (
-                    <tr key={item.name}>
+                    <tr key={item.id} data-toggle="modal" data-target="#ingredientModifyModal" onClick={() => handleUpdate(event,item)}>
                       <td>{item.name}</td>
                       <td>{item.quantity} {item.measurement}</td>
                       <td>${item.cost}</td>
@@ -240,6 +278,99 @@ export default function IngredientForm(props) {
                 })}
               </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Modify Ingredient Modal */}
+      <div className="modal fade" id="ingredientModifyModal" tabIndex="-1" role="dialog" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Modify Ingredient: {ingredient}</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="form-row">
+                <div>
+                  <form className="col-12">
+                    <div className="form-row">
+                      <div className="form-group col-12">
+                        <label>Ingredient:</label>
+                          <input className="form-control" type="text" value={ingredient} onChange={() => setIngredient(event.target.value)}/>
+                      </div>
+                    </div>
+                    <div className="form-row">
+                      <div className="form-group col-3">
+                          <label>Quantity:</label>
+                          <input className="form-control" type="number" value={quantity} onChange={() => setQuantity(Number(event.target.value))}/>
+                        </div>
+                        <div className="form-group col-3">
+                          <label>Measurement:</label>
+                          <select className="form-select form-control" value={measurement} onChange={() => setMeasurement(event.target.value)}>
+                              {measurements.mixed.map((measurement) => {
+                                return (
+                                  <option value={measurement} key={measurement}>{measurement}</option>
+                                )
+                              })}
+                          </select>
+                        </div>
+                      <div className="form-group col-6">
+                        <label>Cost (in $):</label>
+                        <input className="form-control" type="number" value={cost} onChange={() => setCost(Number(event.target.value))}/>
+                      </div>
+                    </div>
+                    <div className="form-row">
+                      <div className="form-group col-12">
+                        <h4>Conversion Factor:</h4>
+                      </div>
+                    </div>
+                    <div className="form-row">
+                      <div className="form-group col-2">
+                        <label>Volume:</label>
+                        <input className="form-control" type="number" value={volumeQuantity} onChange={() => setVolumeQuantity(event.target.value)}/>
+                      </div>
+                      <div className="form-group col-3">
+                        <label>Unit:</label>
+                        <select className="form-select form-control" value={volumeUnit} onChange={() => setVolumeUnit(event.target.value)}>
+                          {measurements.volume.map((measurement) => {
+                            return (
+                            <option value={measurement} key={measurement}>{measurement}</option>
+                          )
+                          })}
+                        </select>
+                      </div>
+                      <div className="form-group col-2">
+                        <label></label>
+                        <h2 className="text-center">=</h2>
+                      </div>
+                      <div className="form-group col-2">
+                        <label>Weight:</label>
+                        <input className="form-control" type="number" value={weightQuantity} onChange={() => setWeightQuantity(event.target.value)}/>
+                      </div>
+                      <div className="form-group col-3">
+                        <label>Unit:</label>
+                        <select className="form-select form-control" value={weightUnit} onChange={() => setWeightUnit(event.target.value)}>
+                          {measurements.weight.map((measurement) => {
+                            return (
+                              <option value={measurement} key={measurement}>{measurement}</option>
+                            )
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              {/* Close Button just closes */}
+              <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={cancelUpdate}>Cancel</button>
+              {/* Save changes button needs to trigger a change onclick */}
+              <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={submitUpdate}>Save changes</button>
             </div>
           </div>
         </div>

@@ -18,7 +18,7 @@ export default function Navbar(props) {
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light" style={navStyle}>
-        <a className="navbar-brand" href="#!">Recipe Calculator</a>
+        <a className="navbar-brand" href="#!">Cost-Calc</a>
         {/* Page Select Options */}
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
