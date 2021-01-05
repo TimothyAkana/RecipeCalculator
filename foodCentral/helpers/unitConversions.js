@@ -52,22 +52,30 @@ module.exports.foodNutrition = (foodPortionData) => {
 }
 
 module.exports.branded = (servingSize, servingUnit, householdText) => {
+  // If no householdText field filled in, generating conversion not possible
   if (householdText === undefined) {
     return undefined;
   }
+
+  // Start parsing the text field, split[0] = quantity, split[1] = measurement
   let split = householdText.split(' ');
-  let unit;
+
+  // Check if quantity is a fraction, normalize to a decimal
+  let quantity;
   if (split[0].indexOf('/') > -1) {
     let fraction = split[0].split('/');
-    unit = Number(fraction[0]) / Number(fraction[1])
+    quantity = Number(fraction[0]) / Number(fraction[1])
   } else {
-    unit = split[0];
+    quantity = split[0];
   }
+
+  // If the the measurement option is in list of valid volumeOptions, return the conversion rate
   if (volumeOptions[split[1].toLowerCase()]) {
     const converted = volumeOptions[split[1].toLowerCase()];
-    const cups = (unit * tspConversions[converted]) / tspConversions['cup'];
+    const cups = (quantity * tspConversions[converted]) / tspConversions['cup'];
     return Number(servingSize) / Number(cups);
   } else {
+  // If measurement option is not valid, return undefined since conversion not possible
     return undefined
   }
 }

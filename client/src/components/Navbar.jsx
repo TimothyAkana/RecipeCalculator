@@ -19,6 +19,7 @@ export default function Navbar(props) {
     <div>
       <nav className="navbar navbar-expand-lg navbar-light" style={navStyle}>
         <a className="navbar-brand" href="#!">Recipe Calculator</a>
+        {/* Page Select Options */}
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item" onClick={() => props.setPage('recipes')}>

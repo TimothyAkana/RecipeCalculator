@@ -4,22 +4,17 @@ import measurements from '../helpers/measurements.js';
 import conversions from '../helpers/conversions.js';
 
 export default function RecipeForm(props) {
-  //Printout of in-progress recipe
+  // Printout of in-progress recipe
   const [ recipeName, setRecipeName ] = useState('');
   const [ recipeDescription, setRecipeDescription ] = useState('');
   const [ ingredientList, setIngredientList ] = useState([]);
 
-  //Ingredient Creation Form Fields
-  const [ ingredientName, setIngredientName ] = useState('');
-  const [ quantity, setQuantity ] = useState('');
-  const [ measurement, setMeasurement] = useState('gram');
-  //TESTING
-  const [ totalCost, setTotalCost ] = useState(0);
+  // Ingredient Values for interacting with database and calculating hidden fields
   const [ costPerGram, setCostPerGram ] = useState('');
   const [ gramsPerCup, setGramsPerCup ] = useState('');
   const [ ingredientId, setIngredientId] = useState('');
 
-  //Populate List of Ingredients in Dropdown with ingredients from database
+  // Populate List of Ingredients in Ingredient options dropdown with ingredients from database
   const [ ingredientDropdown, setIngredientDropdown] = useState([]);
   const [ ingredientCosts, setIngredientCosts] = useState({});
   useEffect(() => {
@@ -31,6 +26,7 @@ export default function RecipeForm(props) {
   }, []);
 
   //Updates total Cost when ingredientList changes
+  const [ totalCost, setTotalCost ] = useState(0);
   useEffect(() => {
     let total = 0;
     for (var i = 0; i < ingredientList.length; i++) {
@@ -39,7 +35,10 @@ export default function RecipeForm(props) {
     setTotalCost(total);
   }, [ingredientList]);
 
-  //Adds Ingredient to Recipe-in-progress
+  // Adds ingredient form fields to the recipe-in-progress printout
+  const [ ingredientName, setIngredientName ] = useState('');
+  const [ quantity, setQuantity ] = useState('');
+  const [ measurement, setMeasurement] = useState('gram');
   const handleSubmit = (event) => {
     event.preventDefault();
     const totalIngredientCost = conversions.totalCost(quantity, measurement, costPerGram, gramsPerCup);
@@ -50,6 +49,7 @@ export default function RecipeForm(props) {
     setMeasurement('gram');
   }
 
+  // Posts full recipe to recipedetails, recipequantities databases
   const handleButton = (event) => {
     event.preventDefault();
     let recipeId;
@@ -71,6 +71,7 @@ export default function RecipeForm(props) {
   return (
     <div className="parent-container d-flex col-6">
       <form onSubmit={handleSubmit} className="col-12">
+        {/* Left Side Column has form fields to Create Recipe */}
         <h3><em>Create A New Recipe</em></h3>
           <div className="form-group mb-3">
             <label className="form-label">Recipe Name</label>
@@ -121,7 +122,7 @@ export default function RecipeForm(props) {
         <input type="submit" value="Add Ingredient" />
       </form>
 
-      {/* Right Side of Page: Recipe Preview */}
+      {/* Right Side Column shows a preview of the Recipe as it is being built */}
       <div className="container col-12">
         <div className="col-lg-12">
           <h2>{recipeName === '' ? 'New Recipe Name' : recipeName}</h2>

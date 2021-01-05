@@ -4,7 +4,7 @@ import conversions from "../helpers/conversions.js";
 import measurements from "../helpers/measurements.js"
 
 export default function Recipes(props) {
-  //Populate List of Recipes initially
+  // List of Completed Recipes, Populates Initial list of recipes from DB on mount
   const [ recipes, setRecipes] = useState([]);
   useEffect(() => {
     axios.get('/recipeDetails')
@@ -14,6 +14,7 @@ export default function Recipes(props) {
       .catch((err) => console.log(err));
   }, []);
 
+  // Currently Selected Recipe, Loads recipe details from selected recipe
   const [ loadedRecipe, setLoadedRecipe ] = useState([]);
   const loadRecipe = (event, recipeId) => {
     event.preventDefault();
@@ -22,25 +23,22 @@ export default function Recipes(props) {
       .catch((err) => console.log(err));
   }
 
+  // Modifying details for a quantity of a particular ingredient
   const [ modifiedIndex, setModifiedIndex ] = useState('');
   const [ quantity, setQuantity ] = useState('');
   const [ measurement, setMeasurement ] = useState('gram');
-  const [ counter, setCounter ] = useState(0);
   const modifyIngredient = () => {
+    // Set the new details
     let newRecipe = loadedRecipe;
     newRecipe[modifiedIndex].ingredientquantity = quantity;
     newRecipe[modifiedIndex].ingredientmeasurement = measurement;
     setLoadedRecipe(newRecipe);
-    setCounter(counter + 1);
+    // Reset the fields
     setQuantity('');
     setMeasurement('gram');
   }
 
-  useEffect(() => {
-    setLoadedRecipe(loadedRecipe);
-  }, [counter]);
-
-  //inline styling
+  // Inline styling
   const containerHeight = {
     height: "100vh"
   }
@@ -51,18 +49,25 @@ export default function Recipes(props) {
 
   return (
     <div className="parent-container d-flex col-6">
-      {/* Left Side is a list of Recipes */}
+      {/* Left Side Column is a list of Completed Recipes */}
       <div className="col-12" style={containerHeight}>
       <h3>Recipes:</h3>
       <ul className="list-group" style={overflowBox}>
         {recipes.map(recipe => {
           return (
-            <button type="button" className="list-group-item list-group-item-action" key={recipe.id} value={recipe.id} onClick={() => loadRecipe(event, recipe.id)}>{recipe.name}</button>
+            <button
+              // type="button"
+              className="list-group-item list-group-item-action"
+              key={recipe.id}
+              value={recipe.id}
+              onClick={() => loadRecipe(event, recipe.id)}
+              > {recipe.name} </button>
           )
         })}
       </ul>
       </div>
-      {/* Right side is the currently loaded recipe */}
+
+      {/* Right Side Column is the currently loaded recipe */}
       <div className="col-12">
         <h3>{loadedRecipe[0] ? loadedRecipe[0].recipename : null}</h3>
         <h5>{loadedRecipe[0] ? loadedRecipe[0].description : null}</h5>
@@ -109,7 +114,7 @@ export default function Recipes(props) {
               </button>
             </div>
             <div className="modal-body">
-              <div>Current =   {loadedRecipe[modifiedIndex] ? `${loadedRecipe[modifiedIndex].ingredientquantity} ${loadedRecipe[modifiedIndex].ingredientmeasurement}` : null}</div>
+              <div>Currently set to: {loadedRecipe[modifiedIndex] ? `${loadedRecipe[modifiedIndex].ingredientquantity} ${loadedRecipe[modifiedIndex].ingredientmeasurement}` : null}</div>
               <div className="form-row">
               <div className="form-group col-4">
                   <label>New Quantity:</label>
@@ -134,7 +139,6 @@ export default function Recipes(props) {
           </div>
         </div>
       </div>
-
     </div>
   )
 }

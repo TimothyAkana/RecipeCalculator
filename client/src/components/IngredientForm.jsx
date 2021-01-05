@@ -4,23 +4,23 @@ import conversions from '../helpers/conversions.js';
 import axios from 'axios';
 
 export default function IngredientForm(props) {
-  //Ingredient Search Form
+  // Ingredient Search Form
   const [ searchOptions, setSearchOptions ] = useState([]);
   const [ search, setSearch ] = useState('');
 
-  //Ingredient Purchase Info
+  // Ingredient Purchase Info
   const [ingredient, setIngredient] = useState('');
   const [quantity, setQuantity] = useState('');
   const [measurement, setMeasurement] = useState('gram');
   const [cost, setCost] = useState('');
 
-  //Ingredient Convertion Info
+  // Ingredient Conversion Info
   const [volumeQuantity, setVolumeQuantity] = useState('');
   const [volumeUnit, setVolumeUnit] = useState('cup');
   const [weightQuantity, setWeightQuantity] = useState('');
   const [weightUnit, setWeightUnit] = useState('gram');
 
-  //Populate Page with previously created ingredient info
+  // Populate Page with previously created ingredient info
   const [purchased, setPurchased] = useState([]);
   useEffect(() => {
     axios.get('/ingredient')
@@ -30,14 +30,15 @@ export default function IngredientForm(props) {
       .catch((err) => console.log(err));
   }, []);
 
-  //Search API for an ingredient
+  // Search API for a list of ingredients matching search term
   const handleSearch = (event) => {
     event.preventDefault();
     axios.get(`/foodCentral/search/${search}`)
       .then((result) => setSearchOptions(result.data))
       .catch((err) => console.log(err));
   }
-  //Filter Search Results
+
+  // Filter Search Results
   const [ filter, setFilter ] = useState('');
   const filterWords = (event) => {
     event.preventDefault();
@@ -48,7 +49,7 @@ export default function IngredientForm(props) {
     setSearchOptions(filtered);
   }
 
-  //Lookup Ingredient details from database
+  // Lookup Ingredient details (for a particular ingredient ID) from database
   const handleLookup = (event, itemId) => {
     event.preventDefault();
     axios.get(`/foodCentral/info/${itemId}`)
@@ -70,7 +71,7 @@ export default function IngredientForm(props) {
       .catch((err) => console.log(err));
   }
 
-  //Submitting a fully-filled in ingredient
+  // Submitting ingredient information to database
   const handleSubmit = (event) => {
     event.preventDefault();
     const gramsPerCup = conversions.gramsPerCup(volumeQuantity, volumeUnit, weightQuantity, weightUnit)
@@ -88,7 +89,7 @@ export default function IngredientForm(props) {
       .catch((err) => console.log(err));
   }
 
-  //inline styling
+  // inline styling
   const containerHeight = {
     height: "100vh"
   }
@@ -143,7 +144,7 @@ export default function IngredientForm(props) {
         </div>
       </div>
 
-      {/* Left Side is Ingredient Form */}
+      {/* Left Side Column is Ingredient Form */}
       <div className="parent-container d-flex col-6">
         <form onSubmit={handleSubmit} className="col-12">
           <div className="form-row">
@@ -214,7 +215,7 @@ export default function IngredientForm(props) {
           <input type="submit" value="Submit Ingredient" />
         </form>
 
-        {/* Right Side is List of purchased Ingredients */}
+        {/* Right Side is List of purchased Ingredients in Database */}
         <div className="container col-12" style={containerHeight}>
           <div className="col-lg-12">
             <h2>Ingredient Inventory</h2>

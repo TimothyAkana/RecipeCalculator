@@ -2,7 +2,7 @@ const db = require('./connection.js');
 const format = require('pg-format');
 
 module.exports = {
-  //Ingredient CRUD Operations
+  // Ingredient CRUD Operations
   addIngredient: (req, res) => {
     const text = 'INSERT INTO recipe.ingredients (name, costpergram, quantity, measurement, cost, gramspercup) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
     const values = [req.body.ingredient, req.body.costPerGram, req.body.quantity, req.body.measurement, req.body.cost, req.body.gramsPerCup];
@@ -34,7 +34,7 @@ module.exports = {
     })
   },
 
-  //Recipe CRUD
+  // Full Recipe CRUD
   getRecipe: (req, res) => {
     db.query(`SELECT d.id recipeId, d.name recipeName, d.description, i.name ingredientname, i.costPerGram, i.gramsPerCup, q.id quantityid, q.ingredientQuantity, q.ingredientMeasurement FROM recipe.ingredients i, recipe.details d, recipe.quantities q WHERE d.id = q.recipeId AND q.ingredientId = i.id AND d.id = ${req.params.recipeId}`, (err, data) => {
       if (err) {console.log(err.stack)}
@@ -44,7 +44,7 @@ module.exports = {
   },
 
 
-  //Recipe CRUD Operations
+  // Recipe Details CRUD Operations
   addRecipeDetails: (req, res) => {
     const text = 'INSERT INTO recipe.details (name, description) VALUES ($1, $2) RETURNING *';
     const values = [req.body.recipeName, req.body.recipeDescription];
@@ -77,7 +77,7 @@ module.exports = {
     })
   },
 
-
+  // Recipe Quantities CRUD Operations
   addRecipeQuantities: (req, res) => {
     const values = [];
     req.body.ingredients.forEach(ingredient => {

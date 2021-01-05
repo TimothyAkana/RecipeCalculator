@@ -8,6 +8,7 @@ const client = new Client({
   database: 'bestbuds',
   port: 5432,
 });
+
 client.connect();
 
 module.exports = client;

@@ -17,6 +17,7 @@ const tspConversions = {
   teaspoon: 1,
 }
 
+// Reduces Any weight measurement to grams and any volume measurements to teaspons
 module.exports.simplifyIngredient = (quantity, measurement) => {
   let convertedQuantity;
   let desiredMeasurement;
@@ -45,6 +46,7 @@ module.exports.costPerGram = (quantity, measurement, cost, gramsPerCup) => {
   }
 }
 
+// Given any volume or weight of an ingredient, return total cost
 module.exports.totalCost = (quantity, measurement, costPerGram, gramsPerCup) => {
   if (gramConversions[measurement]) {
     return costPerGram * quantity * gramConversions[measurement];
